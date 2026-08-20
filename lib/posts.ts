@@ -22,36 +22,51 @@ function readingTime(text: string) {
 
 export function getPostSlugs() {
   if (!fs.existsSync(postsDirectory)) return [];
-  return fs.readdirSync(postsDirectory).filter((name) => name.endsWith('.mdx')).map((name) => name.replace(/\.mdx$/, ''));
+  return fs
+    .readdirSync(postsDirectory)
+    .filter((name) => name.endsWith('.mdx'))
+    .map((name) => name.replace(/\.mdx$/, ''));
 }
 
-export function getPost(slug: string) {
+export function getPost(slug: string): { meta: PostMeta; content: string } | null {
   const fullPath = path.join(postsDirectory, `${slug}.mdx`);
   if (!fs.existsSync(fullPath)) return null;
+
   const source = fs.readFileSync(fullPath, 'utf8');
   const { data, content } = matter(source);
-  return {
-    meta: {
-      slug,
-      title: String(data.title ?? ''),
-      date: String(data.date ?? ''),
-      category: String(data.category ?? 'Journal'),
-      excerpt: String(data.excerpt ?? ''),
-      image: data.image ? String(data.image) : undefined,
-      imageAlt: data.imageAlt ? String(data.imageAlt) : undefined,
-      readingTime: readingTime(content),
-    } satisfies PostMeta,
-    content,
+
+  const meta: PostMeta = {
+    slug,
+    title: String(data.title ?? ''),
+    date: String(data.date ?? ''),
+    category: String(data.category ?? 'Journal'),
+    excerpt: String(data.excerpt ?? ''),
+    readingTime: readingTime(content),
   };
+
+  if (data.image) meta.image = String(data.image);
+  if (data.imageAlt) meta.imageAlt = String(data.imageAlt);
+
+  return { meta, content };
 }
 
 export function getAllPosts(): PostMeta[] {
-  return getPostSlugs()
-    .map((slug) => getPost(slug)?.meta)
-    .filter((post): post is PostMeta => Boolean(post))
-    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+  const posts: PostMeta[] = [];
+
+  for (const slug of getPostSlugs()) {
+    const post = getPost(slug);
+    if (post) posts.push(post.meta);
+  }
+
+  return posts.sort(
+    (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
+  );
 }
 
 export function formatPostDate(date: string) {
-  return new Intl.DateTimeFormat('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }).format(new Date(`${date}T12:00:00Z`));
+  return new Intl.DateTimeFormat('en-GB', {
+    day: '2-digit',
+    month: 'short',
+    year: 'numeric',
+  }).format(new Date(`${date}T12:00:00Z`));
 }
