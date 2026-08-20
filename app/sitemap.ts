@@ -1,9 +1,11 @@
 import type { MetadataRoute } from 'next';
 import { getAllPosts } from '../lib/posts';
 
+const categories = ['journal', 'projects', 'photography', 'places', 'learning', 'work'];
+
 export default function sitemap(): MetadataRoute.Sitemap {
   const base = 'https://blog.marzan.info';
-  const staticPages = ['', '/categories', '/now', '/about'].map((route) => ({
+  const staticPages = ['', '/categories', '/now', '/about', ...categories.map((category) => `/categories/${category}`)].map((route) => ({
     url: `${base}${route}`,
     lastModified: new Date(),
   }));
