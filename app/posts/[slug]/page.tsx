@@ -1,8 +1,42 @@
+import type { Metadata } from 'next';
+import Link from 'next/link';
 import { notFound } from 'next/navigation';
-const posts:any={
- 'unfinished-thoughts':{tag:'Journal',date:'20 August 2026',title:'A place for unfinished thoughts',body:['I wanted a place on the internet that did not need a content strategy. A place where a project update could sit next to a photograph, a travel note, or an idea I have not completely figured out yet.','Social feeds are good at the immediate. This is meant to be slower: a record I can return to, with enough structure to browse but not so much structure that writing becomes work.','So this is the beginning. It will probably change. Good.']},
- 'building-right-now':{tag:'Projects',date:'18 August 2026',title:'What I am building right now',body:['This is where unfinished work gets documented instead of disappearing into folders and commit histories.','Some entries will be technical. Others may simply explain what I tried, what failed, and what I would do differently next time.']},
- 'notes-from-somewhere-else':{tag:'Places',date:'12 August 2026',title:'Notes from somewhere else',body:['Trips tend to collapse into a few photographs surprisingly quickly. I want to keep more of the texture: the train, the weather, what we ate, what went wrong, and the small details between destinations.','This section is for those details.']}
-};
-export function generateStaticParams(){return Object.keys(posts).map(slug=>({slug}))}
-export default async function Post({params}:{params:Promise<{slug:string}>}){const {slug}=await params;const p=posts[slug];if(!p)notFound();return <article><div className="kicker">{p.tag} · {p.date}</div><h1 className="page-title">{p.title}</h1><div className="prose">{p.body.map((x:string,i:number)=><p key={i}>{x}</p>)}</div></article>}
+import MdxContent from '../../../components/mdx-content';
+import { formatPostDate, getPost, getPostSlugs } from '../../../lib/posts';
+
+export function generateStaticParams() {
+  return getPostSlugs().map((slug) => ({ slug }));
+}
+
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+  const { slug } = await params;
+  const post = getPost(slug);
+  if (!post) return {};
+  return {
+    title: post.meta.title,
+    description: post.meta.excerpt,
+    alternates: { canonical: `/posts/${slug}` },
+    openGraph: {
+      title: post.meta.title,
+      description: post.meta.excerpt,
+      type: 'article',
+      publishedTime: post.meta.date,
+      images: post.meta.image ? [{ url: post.meta.image, alt: post.meta.imageAlt || post.meta.title }] : undefined,
+    },
+  };
+}
+
+export default async function Post({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
+  const post = getPost(slug);
+  if (!post) notFound();
+
+  return <article>
+    <Link className="back-link" href="/">← All entries</Link>
+    <div className="kicker">{post.meta.category} · {formatPostDate(post.meta.date)} · {post.meta.readingTime}</div>
+    <h1 className="page-title">{post.meta.title}</h1>
+    <p className="post-deck">{post.meta.excerpt}</p>
+    {post.meta.image && <figure className="hero-image"><img src={post.meta.image} alt={post.meta.imageAlt || post.meta.title} /></figure>}
+    <div className="prose"><MdxContent source={post.content} /></div>
+  </article>;
+}
