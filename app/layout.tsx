@@ -8,5 +8,21 @@ export const metadata = {
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
-  return <html lang="en"><body><header className="site-header"><Link className="brand" href="/">marzan.</Link><nav><Link href="/categories">Categories</Link><Link href="/now">Now</Link><Link href="/about">About</Link></nav></header><main>{children}</main><footer>© 2026 Marzan · Made for things worth remembering.</footer></body></html>;
+  return <html lang="en">
+    <body>
+      <header className="site-header">
+        <Link className="brand" href="/">marzan</Link>
+        <nav aria-label="Primary navigation">
+          <Link href="/categories">Categories</Link>
+          <Link href="/now">Now</Link>
+          <Link href="/about">About</Link>
+        </nav>
+      </header>
+      <main>{children}</main>
+      <footer>
+        <span className="footer-mark">blog.marzan.info</span>
+        <span>Notes, photographs &amp; work in progress · © 2026</span>
+      </footer>
+    </body>
+  </html>;
 }
