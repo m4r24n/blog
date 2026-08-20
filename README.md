@@ -29,4 +29,10 @@ imageAlt: "Description of the cover photo" # optional
 
 5. Commit and push. Vercel publishes the change automatically when it reaches the production branch.
 
-The homepage, post routes, reading time, RSS feed, sitemap, and social metadata are generated from the post files automatically.
+The homepage, post routes, category archives, reading time, RSS feed, sitemap, and social metadata are generated from the post files automatically.
+
+## Useful URLs
+
+- RSS: `/rss.xml`
+- Sitemap: `/sitemap.xml`
+- Categories: `/categories`
