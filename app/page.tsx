@@ -1,33 +1,9 @@
 import Link from 'next/link';
-
-const posts = [
-  {
-    date: '20 AUG 2026',
-    title: 'A place for unfinished thoughts',
-    excerpt: 'Why I wanted a small corner of the internet where projects, photographs and ordinary days can coexist.',
-    tag: 'Journal',
-    slug: 'unfinished-thoughts',
-    visual: 'one'
-  },
-  {
-    date: '18 AUG 2026',
-    title: 'What I am building right now',
-    excerpt: 'A running note about current experiments, software projects, and the things I am trying to understand.',
-    tag: 'Projects',
-    slug: 'building-right-now',
-    visual: 'two'
-  },
-  {
-    date: '12 AUG 2026',
-    title: 'Notes from somewhere else',
-    excerpt: 'A few photographs, a train ride, and the details that would otherwise disappear from memory.',
-    tag: 'Places',
-    slug: 'notes-from-somewhere-else',
-    visual: 'three'
-  }
-];
+import { formatPostDate, getAllPosts } from '../lib/posts';
 
 export default function Home() {
+  const posts = getAllPosts();
+
   return <>
     <section className="hero">
       <div className="hero-copy">
@@ -42,15 +18,17 @@ export default function Home() {
     </section>
 
     <section>
-      <div className="section-head"><h2>Latest entries</h2><span className="meta">2026 · 03 notes</span></div>
-      {posts.map(p => <article className="post" key={p.slug}>
-        <div className="meta">{p.date}</div>
+      <div className="section-head"><h2>Latest entries</h2><span className="meta">{posts.length.toString().padStart(2, '0')} notes</span></div>
+      {posts.map((post, index) => <article className="post" key={post.slug}>
+        <div className="meta">{formatPostDate(post.date)}<br />{post.readingTime}</div>
         <div className="post-copy">
-          <Link href={`/posts/${p.slug}`}><h2>{p.title}</h2></Link>
-          <p>{p.excerpt}</p>
-          <span className="tag">{p.tag}</span>
+          <Link href={`/posts/${post.slug}`}><h2>{post.title}</h2></Link>
+          <p>{post.excerpt}</p>
+          <span className="tag">{post.category}</span>
         </div>
-        <Link href={`/posts/${p.slug}`} aria-label={`Open ${p.title}`}><div className={`post-visual ${p.visual}`} /></Link>
+        <Link href={`/posts/${post.slug}`} aria-label={`Open ${post.title}`}>
+          {post.image ? <img className="post-image" src={post.image} alt={post.imageAlt || ''} /> : <div className={`post-visual ${['one','two','three'][index % 3]}`} />}
+        </Link>
       </article>)}
     </section>
   </>;
