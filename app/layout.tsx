@@ -4,7 +4,8 @@ import Link from 'next/link';
 export const metadata = {
   metadataBase: new URL('https://blog.marzan.info'),
   title: { default: 'Marzan — Notes & Projects', template: '%s — Marzan' },
-  description: 'A personal journal about projects, photographs, places, learning and whatever feels worth writing down.'
+  description: 'A personal journal about projects, photographs, places, learning and whatever feels worth writing down.',
+  alternates: { types: { 'application/rss+xml': '/rss.xml' } },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
