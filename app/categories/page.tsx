@@ -18,6 +18,6 @@ export default function Categories() {
     <div className="kicker">Browse</div>
     <h1 className="page-title">Categories</h1>
     <p className="page-intro">Loose shelves, not strict boxes. A post can belong wherever it makes the most sense.</p>
-    <div className="cards">{categories.map(({ name, count }) => <Link className="card" href={`/categories/${name.toLowerCase()}`} key={name}><h2>{name}</h2><p>{descriptions[name]}</p><span className="meta">{count} {count === 1 ? 'entry' : 'entries'}</span></Link>)}</div>
+    <div className="cards">{categories.map(({ name, count }) => <Link className="card" href={`/categories/${name.toLowerCase()}`} key={name}><h2>{name}</h2><p>{descriptions[name]}</p><span className="meta category-count">{count} {count === 1 ? 'entry' : 'entries'}</span></Link>)}</div>
   </>;
 }
