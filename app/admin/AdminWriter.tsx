@@ -44,7 +44,7 @@ export default function AdminWriter() {
     if(photos.length + images.length > 4) return setStatus('Use at most 4 photos per post.');
     if(images.some(f=>f.size>1_500_000)) return setStatus('Each photo must be 1.5 MB or smaller.');
     if([...photos.map(p=>p.file),...images].reduce((n,f)=>n+f.size,0)>4_000_000) return setStatus('Keep total photo size under 4 MB.');
-    const next=images.map((file,i)=>({file,preview:URL.createObjectURL(file),safeName:safeFileName(file,photos.length+i)}));
+    const next=images.map((file,i)=>({file,preview:URL.createObjectURL(file),safeName:safeFileName(file.name,photos.length+i)}));
     setPhotos(p=>[...p,...next]); setStatus('');
   }
   function fileInput(e:ChangeEvent<HTMLInputElement>){addFiles(Array.from(e.target.files??[]));}
