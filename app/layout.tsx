@@ -3,8 +3,8 @@ import Link from 'next/link';
 
 export const metadata = {
   metadataBase: new URL('https://blog.marzan.info'),
-  title: { default: 'Marzan — Notes & Projects', template: '%s — Marzan' },
-  description: 'A personal journal about projects, photographs, places, learning and whatever feels worth writing down.',
+  title: { default: 'Marzan', template: '%s — Marzan' },
+  description: 'A personal journal of photographs, projects, places and notes.',
   alternates: { types: { 'application/rss+xml': '/rss.xml' } },
 };
 
@@ -12,7 +12,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return <html lang="en">
     <body>
       <header className="site-header">
-        <Link className="brand" href="/">marzan</Link>
+        <Link className="brand" href="/">Marzan</Link>
         <nav aria-label="Primary navigation">
           <Link href="/categories">Categories</Link>
           <Link href="/now">Now</Link>
@@ -21,8 +21,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </header>
       <main>{children}</main>
       <footer>
-        <span className="footer-mark">blog.marzan.info</span>
-        <span>Notes, photographs &amp; work in progress · © 2026</span>
+        <span>© 2026 Marzan</span>
+        <Link href="/rss.xml">RSS</Link>
       </footer>
     </body>
   </html>;
