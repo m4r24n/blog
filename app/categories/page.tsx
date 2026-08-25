@@ -1,23 +1,5 @@
 import Link from 'next/link';
 import { getAllPosts } from '../../lib/posts';
+import { categories } from '../../lib/category-art';
 
-const descriptions: Record<string, string> = {
-  Journal: 'Personal notes, observations and whatever feels worth writing down.',
-  Projects: 'Things I am building, testing, fixing or learning through making.',
-  Photography: 'Photographs and the stories or details around them.',
-  Places: 'Travel notes, walks, trains and places I want to remember.',
-  Learning: 'Ideas, books, technical notes and things I recently understood.',
-  Work: 'Selected professional notes and updates from ongoing work.',
-};
-
-export default function Categories() {
-  const posts = getAllPosts();
-  const categories = Object.keys(descriptions).map((name) => ({ name, count: posts.filter((post) => post.category === name).length }));
-
-  return <>
-    <div className="kicker">Browse</div>
-    <h1 className="page-title">Categories</h1>
-    <p className="page-intro">Loose shelves, not strict boxes. A post can belong wherever it makes the most sense.</p>
-    <div className="cards">{categories.map(({ name, count }) => <Link className="card" href={`/categories/${name.toLowerCase()}`} key={name}><h2>{name}</h2><p>{descriptions[name]}</p><span className="meta category-count">{count} {count === 1 ? 'entry' : 'entries'}</span></Link>)}</div>
-  </>;
-}
+export default function Categories(){const posts=getAllPosts();return <><div className="kicker">Browse</div><h1 className="page-title">Categories</h1><p className="page-intro">Loose shelves, not strict boxes. Each one has its own small visual marker.</p><div className="category-cards">{Object.entries(categories).map(([name,meta])=>{const count=posts.filter(p=>p.category===name).length;return <Link href={`/categories/${meta.slug}`} className="category-card" key={name}><img src={meta.art} alt=""/><div><h2>{name}</h2><p>{meta.description}</p><span className="meta">{count} {count===1?'entry':'entries'}</span></div></Link>})}</div></>}
